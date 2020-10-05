@@ -1,0 +1,25 @@
+//////////////////////////////////////////////////////////////////////////////
+/*
+Project: Meteomatics weather model
+Created: 2020-03-17 by Christoph Heim <mailto:cheim@meteomatics.ch>
+Description:
+     Utility functions
+*/
+//////////////////////////////////////////////////////////////////////////////
+#include "utilities.h"
+#include "constants.h"
+#include "math.h"
+#include <iostream>
+using namespace std;
+
+//////////////////////////////////////////////////////////////////////////////
+////// GENERIC FUNCTIONS
+//////////////////////////////////////////////////////////////////////////////
+
+bool cmpf(dtype a, dtype b, dtype epsilon /*=0.000001f*/)
+/*
+    Compare to dtype numbers and return true if a == b with precision epsilon.
+*/
+{
+    return(fabs(a - b) < epsilon);
+}

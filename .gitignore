@@ -1,0 +1,6 @@
+figures/*
+obj/*
+output/*
+main
+__pycache__
+Session.vim

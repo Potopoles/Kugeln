@@ -34,15 +34,16 @@ for sim_time in sim_times:
 
     if nl.var_name == 'XSPEED':
         plot_field = xspeed
-    if nl.var_name == 'VOLUME':
+    elif nl.var_name == 'VOLUME':
         plot_field = volume
     else: raise NotImplementedError()
 
     fig = plt.figure(figsize=(6,5.0))
     ax1 = fig.add_subplot(111)
     ax1.scatter(xpos, zpos, c=plot_field)
-    ax1.set_xlim((0,10))
-    ax1.set_ylim((0,10))
+    ax1.set_xlim((0,1000))
+    ax1.set_ylim((0,1000))
+    ax1.set_title(np.max(np.abs(plot_field)))
     
     fig.tight_layout()
     fig_path = os.path.join(nl.fig_folder, 

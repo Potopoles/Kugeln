@@ -11,7 +11,7 @@ Description:
 #include <map>
 using namespace std;
 
-State::State(int nparticles)
+State::State(int nparticles, int nclosest_part)
 {
     //////////////////////////////////////////////////////////////////////////
     //// particle quantities
@@ -22,6 +22,8 @@ State::State(int nparticles)
     ZSPEED.reserve(nparticles);
     VOLUME.reserve(nparticles);
     TEMP.reserve(nparticles);
+
+    NEIGHID.resize(nparticles, vector<int>(nclosest_part, 0));
 
     for ( int pid = 0; pid < nparticles; pid++ )
     {

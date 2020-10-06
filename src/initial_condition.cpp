@@ -17,8 +17,8 @@ void init_position(Grid &gr,
 {
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
-        state_now.XSPEED[pid] = 0.1 * rand() / dtype(RAND_MAX);
-        state_now.ZSPEED[pid] = 0.0;
+        state_now.XSPEED[pid] = 0.0 * rand() / dtype(RAND_MAX);
+        state_now.ZSPEED[pid] = 0.0 * rand() / dtype(RAND_MAX);
 
         state_now.XPOS[pid] = rand() / dtype(RAND_MAX) * 
                             (gr.dom_x1 - gr.dom_x0) + gr.dom_x0;

@@ -43,28 +43,29 @@ int main(int argc, char** argv)
     //////// GRID
     nl.nparticles   = atoi(argv[1]);
     nl.dom_x0       = 0.;
-    nl.dom_x1       = 10.;
+    nl.dom_x1       = 1000.;
     nl.dom_z0       = 0.;
-    nl.dom_z1       = 10.;
+    nl.dom_z1       = 1000.;
     nl.ncells_part = 20;
+    nl.nclosest_part = 5;
     //////// INTEGRATION
-    nl.tot_time = 60.0;
-    nl.dt = 1.;
+    nl.tot_time = 60;
+    nl.dt = 5E-2;
     cout << "time step " << nl.dt << endl;
     //// DISCRETISATION
     // TIME
     nl.time_discr = Integrator::EULER_FORWARD;
-    nl.time_discr = Integrator::RK4;
-    nl.time_discr = Integrator::RK3;
-    nl.time_discr = Integrator::RK2;
-    nl.time_discr = Integrator::RK1;
-    nl.time_discr = Integrator::LEAP_FROG;
-    nl.time_discr = Integrator::MATSUNO;
+    //nl.time_discr = Integrator::RK4;
+    //nl.time_discr = Integrator::RK3;
+    //nl.time_discr = Integrator::RK2;
+    //nl.time_discr = Integrator::RK1;
+    //nl.time_discr = Integrator::LEAP_FROG;
+    //nl.time_discr = Integrator::MATSUNO;
     //// INITIAL CONDITIONS
     //// OUTPUT
     nl.bin_dir  = "output";
     // write output every xxx hours.
-    nl.nth_sec_out = 10.;
+    nl.nth_sec_out = 1;
 
     ////// CREATE GRID
     ////////////////////////////////////////////////////////////////////////////
@@ -75,13 +76,25 @@ int main(int argc, char** argv)
     //// SETUP MODEL FIELDS
     //////////////////////////////////////////////////////////////////////////
     // state at current time step
-    State state_now = State(gr.nparticles);
+    State state_now = State(gr.nparticles, gr.nclosest_part);
     // state at next time step
-    State state_new = State(gr.nparticles);
+    State state_new = State(gr.nparticles, gr.nclosest_part);
     // temporary state used for Runge Kutta
     // last time step state for leap frog
     // estimate state for Matsuno
-    State state_tmp = State(gr.nparticles);
+    State state_tmp = State(gr.nparticles, gr.nclosest_part);
+
+    /*
+    for (int j = 0; j < gr.nparticles; j++)
+    {
+        for (int i = 0; i < gr.nclosest_part; i++)
+        {
+            cout << state_now.NEIGHID[i][j] << " ";
+        }
+        cout << endl;
+    }
+    exit(1);
+    */
 
     // setting initial conditions
     init_position(gr, state_now, state_new, state_tmp);
@@ -131,6 +144,7 @@ int main(int argc, char** argv)
         //// OUTPUT
         //////////////////////////////////////////////////////////////////////////
         //if ((gr.tstep == 0))
+        cout << gr.tstep << endl;
         if ((gr.tstep % gr.nth_tstep_out == 0))
         {
             timer.start("save_fields");

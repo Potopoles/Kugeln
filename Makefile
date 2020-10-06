@@ -10,7 +10,7 @@ LIBS=-lm
 
 _DEPS = \
 constants.h namelist.h \
-StopWatch.h utilities.h debug.h\
+StopWatch.h utilities.h debug.h grid_funcs.h\
 integrator.h \
 dynamic_tendencies.h \
 state.h grid.o\
@@ -19,7 +19,7 @@ io.h \
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 
 _OBJ = main.o \
-StopWatch.o utilities.o debug.o\
+StopWatch.o utilities.o debug.o grid_funcs.o\
 integrator.o \
 dynamic_tendencies.o \
 state.o grid.o\

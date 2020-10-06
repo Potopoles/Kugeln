@@ -20,6 +20,9 @@ typedef float dtype;
 // gravity constant [m/s] (taken from Williamson 1992 test suite)
 const dtype CON_G = 9.80616;
 
+// gas constant for dry air [J/kg/K]
+const dtype CON_RD = 287.058;
+
 // pi
 const dtype CON_PI = 3.141592;
 

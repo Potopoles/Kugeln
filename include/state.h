@@ -19,7 +19,7 @@ class State
 Contains arrays storing variables at one (sub) time level.
 */
 public:
-    State(int nparticles);
+    State(int nparticles, int nclosest_part);
 
     //////////////////////////////////////////////////////////////////////////
     //// particle quantities
@@ -36,4 +36,7 @@ public:
     vector<dtype> VOLUME;
     // TEMP: particle temperature  [K]
     vector<dtype> TEMP;
+
+    // NEIGHID: indices (pids) of CON_N_CLOSEST_NEIGHS particles
+    vector<vector<int>> NEIGHID;
 };

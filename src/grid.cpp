@@ -31,6 +31,8 @@ Grid::Grid(Namelist nl, Timer &timer)
     nt               = nl.tot_time / nl.dt + 1;
     time_discr       = nl.time_discr;
     nth_tstep_out    = (int) nl.nth_sec_out / nl.dt;
+    //nth_tstep_out    = 20;
+    nclosest_part    = nl.nclosest_part;
 
     tstep            = 0;
     if (nl.dom_x1 - nl.dom_x0 != nl.dom_z1 - nl.dom_z0)

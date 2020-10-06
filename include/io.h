@@ -43,7 +43,6 @@ void grid_io_intv2str(vector<int> const& vect,
 void grid_io_dtypev2str(vector<dtype> const& vect, 
                     ostringstream& oss, int nentries);
 void grid_io_cc2str(cart_coords const& cc, ostringstream& oss);
-void grid_io_pol2str(polar_coords const& pol, ostringstream& oss);
 void grid_io_1Dintarr2str(int arr[], ostringstream& oss, int size);
 void grid_io_1Ddtypearr2str(dtype arr[], ostringstream& oss, int size);
 //template <size_t rows, size_t cols>
@@ -53,6 +52,5 @@ void grid_io_1Ddtypearr2str(dtype arr[], ostringstream& oss, int size);
 vector<int> grid_io_str2intv(string str, char sep, int nentries);
 vector<dtype> grid_io_str2dtypev(string str, char sep, int nentries);
 cart_coords grid_io_str2cc(string str, char sep);
-polar_coords grid_io_str2pol(string str, char sep);
 void grid_io_str21Dintarr(int arr[], string str, char sep, int size);
 void grid_io_str21Ddtypearr(dtype arr[], string str, char sep, int size);

@@ -16,25 +16,6 @@ Cartesian coordinates
 struct cart_coords
 {
     dtype x;
-    dtype y;
+    //dtype y;
     dtype z;
 };
-
-/*
-Polar coordinates
-*/
-struct polar_coords
-{
-    dtype lon;
-    dtype lat;
-};
-
-///*
-//Vertex indices of each triangular cell
-//*/
-//struct vert_inds_of_cell
-//{
-//    int v0;
-//    int v1;
-//    int v2;
-//};

@@ -32,6 +32,7 @@ void field_to_binary(Namelist nl, const Grid &gr,
     // construct output path
     ostringstream oss;
     oss << internal << setfill('0') << setw(5) << (int) gr.sim_time;
+    //oss << internal << setfill('0') << setw(5) << (int) gr.tstep;
     string field_out_path = nl.bin_dir + "/" + nl.sim_tag + 
                     "_np" + to_string(gr.nparticles) +
                     "_" + field_name +
@@ -121,16 +122,9 @@ void grid_io_cc2str(cart_coords const& cc, ostringstream& oss)
 {
     oss << cc.x;
     oss << GRID_IO_SEP_INNER;
-    oss << cc.y;
-    oss << GRID_IO_SEP_INNER;
+    //oss << cc.y;
+    //oss << GRID_IO_SEP_INNER;
     oss << cc.z;
-    oss << GRID_IO_SEP_OUTER;
-}
-void grid_io_pol2str(polar_coords const& pol, ostringstream& oss)
-{
-    oss << pol.lon;
-    oss << GRID_IO_SEP_INNER;
-    oss << pol.lat;
     oss << GRID_IO_SEP_OUTER;
 }
 void grid_io_1Dintarr2str(int arr[], ostringstream& oss, int size)
@@ -188,19 +182,10 @@ cart_coords grid_io_str2cc(string str, char sep)
     vector<string> split = grid_io_str_split(str, sep);
     cart_coords cc;
     cc.x = stof(split[0]);
-    cc.y = stof(split[1]);
+    //cc.y = stof(split[1]);
     cc.z = stof(split[2]);
     //cout << cc.x << " " << cc.y << " " << cc.z << " ";
     return(cc);
-}
-polar_coords grid_io_str2pol(string str, char sep)
-{
-    vector<string> split = grid_io_str_split(str, sep);
-    polar_coords pol;
-    pol.lon = stof(split[0]);
-    pol.lat = stof(split[1]);
-    //cout << pol.lon << " " << pol.lat << " ";
-    return(pol);
 }
 void grid_io_str21Dintarr(int arr[], string str, char sep, int size)
 {

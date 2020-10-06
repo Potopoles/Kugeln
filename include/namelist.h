@@ -27,6 +27,9 @@ struct Namelist
     // number of cells per particle on average to compute
     // particle volume
     dtype ncells_part;
+    // number of closest particle neighbors that should be
+    // considered during spatial discretization.
+    int nclosest_part;
 
     //////// INTEGRATION
     // total integration time in seconds

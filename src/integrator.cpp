@@ -79,18 +79,59 @@ void Integrator::exchange_time_levels(const Grid &gr,
     {
         for ( int pid = 0; pid < gr.nparticles; pid++ )
         {
+            // particle position
             state_tmp.XPOS[pid] = state_now.XPOS[pid];
+            state_tmp.ZPOS[pid] = state_now.ZPOS[pid];
+
+            // particle speed
+            state_tmp.XSPEED[pid] = state_now.XSPEED[pid];
+            state_tmp.ZSPEED[pid] = state_now.ZSPEED[pid];
         }
     }
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
         state_now.XPOS[pid] = state_new.XPOS[pid];
+        state_now.ZPOS[pid] = state_new.ZPOS[pid];
+
+        state_now.XSPEED[pid] = state_new.XSPEED[pid];
+        state_now.ZSPEED[pid] = state_new.ZSPEED[pid];
     }
 }
 
 void Integrator::_compute_tendencies(const Grid &gr, State &state)
 {
     timer->start("integrator.tendencies");
+
+    timer->start("integrator.tendencies.neighids");
+    // find closest particles
+    for ( int pid = 0; pid < gr.nparticles; pid++ )
+    {
+        // vector storing distances
+        vector<dtype> dists (gr.nclosest_part, 1.E10);
+        for ( int pid2 = 0; pid2 < gr.nparticles; pid2++ )
+        {
+            if (pid2 == pid) continue;
+
+            dtype dist = sqrt(
+                pow(state.XPOS[pid] - state.XPOS[pid2], 2.) +
+                pow(state.ZPOS[pid] - state.ZPOS[pid2], 2.) );
+
+            set_dist_position(pid2, dist, dists, state.NEIGHID[pid]);
+
+            /*
+            for (int i = 0; i < gr.nclosest_part; i++)
+            {
+                cout << state.NEIGHID[pid][i] << " ";
+                cout << dists[i] << "   ";
+            }
+            cout << endl;
+            */
+        }
+    }
+    timer->stop("integrator.tendencies.neighids");
+    //exit(1);
+
+    timer->start("integrator.tendencies.volume");
     // find particle volume
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
@@ -131,21 +172,73 @@ void Integrator::_compute_tendencies(const Grid &gr, State &state)
             state.VOLUME[pid] = gr.cell_vol;
         }
     }
+    timer->stop("integrator.tendencies.volume");
 
     // compute tendencies
     dynamic_tendencies->compute_tendencies(gr, state);
+    //exit(1);
     timer->stop("integrator.tendencies");
 }
 
 void Integrator::_advance_time(const Grid &gr, dtype time_step,
                                 State &state_now, State &state_new)
 {
-    // advance positions
+    // advance particle position and speed
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
+        // particle position
         state_new.XPOS[pid] = state_now.XPOS[pid] + 
                         dynamic_tendencies->TXPOS[pid] * time_step;
+        state_new.ZPOS[pid] = state_now.ZPOS[pid] + 
+                        dynamic_tendencies->TZPOS[pid] * time_step;
+
+        // particle speed
+        state_new.XSPEED[pid] = state_now.XSPEED[pid] + 
+                    dynamic_tendencies->TXSPEED[pid] * time_step;
+        state_new.ZSPEED[pid] = state_now.ZSPEED[pid] + 
+                    dynamic_tendencies->TZSPEED[pid] * time_step;
+
+        // rigid boundaries x
+        if (state_new.XPOS[pid] < gr.dom_x0)
+        {
+            state_new.XPOS[pid] = gr.dom_x0 - state_new.XPOS[pid];
+            state_new.XSPEED[pid] = 0.;
+        }
+        if (state_new.XPOS[pid] > gr.dom_x1)
+        {
+            state_new.XPOS[pid] = gr.dom_x1 - 
+                        (state_new.XPOS[pid] - gr.dom_x1);
+            state_new.XSPEED[pid] = 0.;
+        }
+        /*
+        // periodic boundaries x
+        if (state_new.XPOS[pid] < gr.dom_x0)
+        {
+            state_new.XPOS[pid] = gr.dom_x1 - 
+                        (gr.dom_x0 - state_new.XPOS[pid]);
+        }
+        if (state_new.XPOS[pid] > gr.dom_x1)
+        {
+            state_new.XPOS[pid] = gr.dom_x0 + 
+                        (state_new.XPOS[pid] - gr.dom_x1);
+        }
+        */
+        // rigid boundaries z
+        if (state_new.ZPOS[pid] < gr.dom_z0)
+        {
+            state_new.ZPOS[pid] = gr.dom_z0 - state_new.ZPOS[pid];
+            state_new.ZSPEED[pid] = 0.;
+        }
+        if (state_new.ZPOS[pid] > gr.dom_z1)
+        {
+            state_new.ZPOS[pid] = gr.dom_z1 - 
+                        (state_new.ZPOS[pid] - gr.dom_z1);
+            state_new.ZSPEED[pid] = 0.;
+        }
+
+        //cout << "xspeed " << state_new.XSPEED[pid] - state_now.XSPEED[pid] << endl;
     }
+    //exit(1);
 
 }
 

@@ -1,7 +1,7 @@
 Experimental Lagrangian Fluid Dynamics Model
 
 Can be compiled with:  
-make clean
+make clean 
 make
 
 

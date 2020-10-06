@@ -24,6 +24,9 @@ struct Namelist
     dtype dom_x1;
     dtype dom_z0;
     dtype dom_z1;
+    // number of cells per particle on average to compute
+    // particle volume
+    dtype ncells_part;
 
     //////// INTEGRATION
     // total integration time in seconds

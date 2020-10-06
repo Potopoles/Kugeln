@@ -6,7 +6,7 @@ make
 
 
 After compilation, run with e.g.:  
-./main 100
+./main 100 
 args:  
     - 1: number of particles  
 

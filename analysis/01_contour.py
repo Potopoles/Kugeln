@@ -27,12 +27,20 @@ for sim_time in sim_times:
                         nl.resolution, nl.sim_tag, nl.dtype)
     zspeed = load_field('ZSPEED', nl.bin_folder, sim_time,
                         nl.resolution, nl.sim_tag, nl.dtype)
+    volume = load_field('VOLUME', nl.bin_folder, sim_time,
+                        nl.resolution, nl.sim_tag, nl.dtype)
     temp = load_field('TEMP', nl.bin_folder, sim_time,
                         nl.resolution, nl.sim_tag, nl.dtype)
 
+    if nl.var_name == 'XSPEED':
+        plot_field = xspeed
+    if nl.var_name == 'VOLUME':
+        plot_field = volume
+    else: raise NotImplementedError()
+
     fig = plt.figure(figsize=(6,5.0))
     ax1 = fig.add_subplot(111)
-    ax1.scatter(xpos, zpos)
+    ax1.scatter(xpos, zpos, c=plot_field)
     ax1.set_xlim((0,10))
     ax1.set_ylim((0,10))
     

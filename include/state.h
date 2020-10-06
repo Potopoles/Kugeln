@@ -32,6 +32,8 @@ public:
     vector<dtype> XSPEED;
     // ZSPEED: particle speed in z direction [m s-1]
     vector<dtype> ZSPEED;
+    // VOLUME: particle voluem [m3]
+    vector<dtype> VOLUME;
     // TEMP: particle temperature  [K]
     vector<dtype> TEMP;
 };

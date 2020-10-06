@@ -30,6 +30,16 @@ public:
     dtype dom_x1;
     dtype dom_z0;
     dtype dom_z1;
+    dtype dom_vol;
+    // number of cells per particle on average to compute
+    // particle volume
+    dtype ncells_part;
+    // number of cells to compute particle volume
+    dtype ncells;
+    int ncells_x;
+    int ncells_z;
+    dtype cell_dx;
+    dtype cell_vol;
 
     // time increments of time steps
     dtype dt;

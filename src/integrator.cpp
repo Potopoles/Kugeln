@@ -9,7 +9,7 @@ Description:
 #include "integrator.h"
 #include "utilities.h"
 #include "io.h"
-#include "spatial_tendencies.h"
+#include "dynamic_tendencies.h"
 #include <iostream>
 #include <vector>
 #include <map>
@@ -30,7 +30,7 @@ Integrator::Integrator(Grid &gr, Timer* timer_in)
 {
     timer = timer_in;
 
-    spatial_tendencies = new Spatial_Tendencies(gr);
+    dynamic_tendencies = new Dynamic_Tendencies(gr);
 }
 
 void Integrator::integrate(const Grid &gr,
@@ -91,8 +91,49 @@ void Integrator::exchange_time_levels(const Grid &gr,
 void Integrator::_compute_tendencies(const Grid &gr, State &state)
 {
     timer->start("integrator.tendencies");
+    // find particle volume
+    for ( int pid = 0; pid < gr.nparticles; pid++ )
+    {
+        state.VOLUME[pid] = 0.;
+    }
+    for (int i = 0; i < gr.ncells_x; i++)
+    {
+        for (int k = 0; k < gr.ncells_z; k++)
+        {
+            // find closest particle to current cell
+            dtype min_dist = 99999999.;
+            int pid_min = 0;
+            for ( int pid = 0; pid < gr.nparticles; pid++ )
+            {
+                dtype cell_x = (i + 0.5) * gr.cell_dx;
+                dtype cell_z = (k + 0.5) * gr.cell_dx;
+                dtype dist = sqrt(
+                    pow(state.XPOS[pid] - cell_x, 2.) +
+                    pow(state.ZPOS[pid] - cell_z, 2.) );
+                if (dist < min_dist)
+                {
+                    min_dist = dist;
+                    pid_min = pid;
+                    //cout << min_dist << "  " << pid_min << endl;
+                } 
+            }
+            // add volume of current cell to closest particle
+            state.VOLUME[pid_min] += gr.cell_vol;
+        }
+    }
+    // test for zero particle volumes and set those to minimum vol.
+    for ( int pid = 0; pid < gr.nparticles; pid++ )
+    {
+        if (state.VOLUME[pid] == 0.)
+        {
+            cout << "Cell volume is zero!!" << endl;
+            //exit(1);
+            state.VOLUME[pid] = gr.cell_vol;
+        }
+    }
+
     // compute tendencies
-    spatial_tendencies->compute_pos_tendencies(gr, state);
+    dynamic_tendencies->compute_tendencies(gr, state);
     timer->stop("integrator.tendencies");
 }
 
@@ -103,7 +144,7 @@ void Integrator::_advance_time(const Grid &gr, dtype time_step,
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
         state_new.XPOS[pid] = state_now.XPOS[pid] + 
-                        spatial_tendencies->TXPOS[pid] * time_step;
+                        dynamic_tendencies->TXPOS[pid] * time_step;
     }
 
 }
@@ -186,7 +227,7 @@ void Integrator::_runge_kutta(const Grid &gr, string rk_order,
     // Actually only necessary for RK3 & RK4.
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
-        spatial_tendencies->TXPOS[pid] = state_tmp.XPOS[pid];
+        dynamic_tendencies->TXPOS[pid] = state_tmp.XPOS[pid];
     }
 
     // do definitive time step

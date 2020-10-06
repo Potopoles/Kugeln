@@ -46,6 +46,7 @@ int main(int argc, char** argv)
     nl.dom_x1       = 10.;
     nl.dom_z0       = 0.;
     nl.dom_z1       = 10.;
+    nl.ncells_part = 20;
     //////// INTEGRATION
     nl.tot_time = 60.0;
     nl.dt = 1.;
@@ -91,6 +92,7 @@ int main(int argc, char** argv)
     field_to_binary(nl, gr, state_now.ZPOS, "ZPOS");
     field_to_binary(nl, gr, state_now.XSPEED, "XSPEED");
     field_to_binary(nl, gr, state_now.ZSPEED, "ZSPEED");
+    field_to_binary(nl, gr, state_now.VOLUME, "VOLUME");
     field_to_binary(nl, gr, state_now.TEMP, "TEMP");
 
     ////////////////////////////////////////////////////////////////////////////
@@ -136,6 +138,7 @@ int main(int argc, char** argv)
             field_to_binary(nl, gr, state_now.ZPOS, "ZPOS");
             field_to_binary(nl, gr, state_now.XSPEED, "XSPEED");
             field_to_binary(nl, gr, state_now.ZSPEED, "ZSPEED");
+            field_to_binary(nl, gr, state_now.VOLUME, "VOLUME");
             field_to_binary(nl, gr, state_now.TEMP, "TEMP");
             //exit(1);
             timer.stop("save_fields");

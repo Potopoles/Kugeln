@@ -12,7 +12,7 @@ _DEPS = \
 constants.h namelist.h \
 StopWatch.h utilities.h debug.h\
 integrator.h \
-spatial_tendencies.h \
+dynamic_tendencies.h \
 state.h grid.o\
 initial_condition.h \
 io.h \
@@ -21,7 +21,7 @@ DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
 _OBJ = main.o \
 StopWatch.o utilities.o debug.o\
 integrator.o \
-spatial_tendencies.o \
+dynamic_tendencies.o \
 state.o grid.o\
 initial_condition.o \
 io.o

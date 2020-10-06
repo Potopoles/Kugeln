@@ -14,10 +14,10 @@ Description:
 #include <map>
 
 
-class Spatial_Tendencies
+class Dynamic_Tendencies
 {
     public:
-        Spatial_Tendencies(Grid &gr);
+        Dynamic_Tendencies(Grid &gr);
 
         // contains tendency of XPOS
         vector<dtype> TXPOS;
@@ -29,8 +29,7 @@ class Spatial_Tendencies
         // contains tendency of ZSPEED
         vector<dtype> TZSPEED;
 
-        void compute_pos_tendencies(const Grid &gr, State& state);
-        void compute_speed_tendencies(const Grid &gr, State& state);
+        void compute_tendencies(const Grid &gr, State& state);
 
     private:
         

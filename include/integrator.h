@@ -9,7 +9,7 @@ Description:
 #pragma once
 #include "grid.h"
 #include "state.h"
-#include "spatial_tendencies.h"
+#include "dynamic_tendencies.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -51,7 +51,7 @@ forward in time.
 
     private:
         // pointers to objects of tendency classes
-        Spatial_Tendencies* spatial_tendencies;
+        Dynamic_Tendencies* dynamic_tendencies;
 
         // organise computation of time tendencies
         void _compute_tendencies(const Grid &gr, State &state);

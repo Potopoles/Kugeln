@@ -20,6 +20,7 @@ State::State(int nparticles)
     ZPOS.reserve(nparticles);
     XSPEED.reserve(nparticles);
     ZSPEED.reserve(nparticles);
+    VOLUME.reserve(nparticles);
     TEMP.reserve(nparticles);
 
     for ( int pid = 0; pid < nparticles; pid++ )
@@ -28,6 +29,7 @@ State::State(int nparticles)
         ZPOS.push_back(0.);
         XSPEED.push_back(0.);
         ZSPEED.push_back(0.);
+        VOLUME.push_back(0.);
         TEMP.push_back(0.);
     }
 

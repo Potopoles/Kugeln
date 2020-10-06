@@ -33,6 +33,17 @@ Grid::Grid(Namelist nl, Timer &timer)
     nth_tstep_out    = (int) nl.nth_sec_out / nl.dt;
 
     tstep            = 0;
+    if (nl.dom_x1 - nl.dom_x0 != nl.dom_z1 - nl.dom_z0)
+    {
+        cout << "only implemented for dx = dz" << endl;
+        exit(1);
+    }
+    dom_vol = (nl.dom_x1 - nl.dom_x0) * (nl.dom_z1 - nl.dom_z0);
+    ncells = nparticles * nl.ncells_part;
+    cell_dx = sqrt(dom_vol / ncells);
+    cell_vol = dom_vol / ncells;
+    ncells_x = (int) (nl.dom_x1 - nl.dom_x0) / cell_dx;
+    ncells_z = (int) (nl.dom_z1 - nl.dom_z0) / cell_dx;
 
     //////////////////////////////////////////////////////////////////////
     //// SET UP GRID 

@@ -7,14 +7,14 @@ Description:
      to compute tendency of XPOS and YPOS.
 */
 //////////////////////////////////////////////////////////////////////////////
-#include "spatial_tendencies.h"
+#include "dynamic_tendencies.h"
 #include <iostream>
 #include <fstream>
 #include <iterator>
 #include <sstream>
 
 
-Spatial_Tendencies::Spatial_Tendencies(Grid &gr)
+Dynamic_Tendencies::Dynamic_Tendencies(Grid &gr)
 {
     TXPOS.reserve(gr.nparticles);
     for ( int pid = 0; pid < gr.nparticles; pid++ )
@@ -23,13 +23,13 @@ Spatial_Tendencies::Spatial_Tendencies(Grid &gr)
     }
 }
 
-void Spatial_Tendencies::compute_pos_tendencies(
+void Dynamic_Tendencies::compute_tendencies(
                     const Grid &gr, State& state)
 {
     #pragma omp parallel for
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
-        TXPOS[pid] = 0.1;
+        TXPOS[pid] = state.XSPEED[pid];
     }
 
 }

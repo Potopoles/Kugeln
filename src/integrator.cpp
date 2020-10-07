@@ -104,10 +104,27 @@ void Integrator::_compute_tendencies(const Grid &gr, State &state)
 
     timer->start("integrator.tendencies.neighids");
     // find closest particles
+    #pragma omp parallel for
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
         // vector storing distances
         vector<dtype> dists (gr.nclosest_part, 1.E10);
+        
+        // get distance to walls
+        // left wall
+        dtype dist = state.XPOS[pid] - gr.dom_x0;
+        set_dist_position(-1, dist, dists, state.NEIGHID[pid]);
+        // lower wall
+        dist = state.ZPOS[pid] - gr.dom_z0;
+        set_dist_position(-2, dist, dists, state.NEIGHID[pid]);
+        // right wall
+        dist = gr.dom_x1 - state.XPOS[pid];
+        set_dist_position(-3, dist, dists, state.NEIGHID[pid]);
+        // upper wall
+        dist = gr.dom_z1 - state.ZPOS[pid];
+        set_dist_position(-4, dist, dists, state.NEIGHID[pid]);
+
+        // get distance to closest neighbors
         for ( int pid2 = 0; pid2 < gr.nparticles; pid2++ )
         {
             if (pid2 == pid) continue;
@@ -117,26 +134,81 @@ void Integrator::_compute_tendencies(const Grid &gr, State &state)
                 pow(state.ZPOS[pid] - state.ZPOS[pid2], 2.) );
 
             set_dist_position(pid2, dist, dists, state.NEIGHID[pid]);
-
-            /*
-            for (int i = 0; i < gr.nclosest_part; i++)
-            {
-                cout << state.NEIGHID[pid][i] << " ";
-                cout << dists[i] << "   ";
-            }
-            cout << endl;
-            */
         }
+        /*
+        for (int i = 0; i < gr.nclosest_part; i++)
+        {
+            cout << state.NEIGHID[pid][i] << " ";
+            cout << dists[i] << "   ";
+        }
+        cout << endl;
+        */
     }
+    //exit(1);
     timer->stop("integrator.tendencies.neighids");
     //exit(1);
 
     timer->start("integrator.tendencies.volume");
     // find particle volume
+    dtype vol_sum = 0.;
+    #pragma omp parallel for
+    for ( int pid = 0; pid < gr.nparticles; pid++ )
+    {
+        state.VOLUME[pid] = 0.;
+        for ( int i = 0; i < gr.nclosest_part; i++ )
+        {
+            int npid = state.NEIGHID[pid][i];
+            dtype dist;
+            if (npid >= 0)
+            {
+                dist = sqrt(
+                    pow(state.XPOS[pid] - state.XPOS[npid], 2.) +
+                    pow(state.ZPOS[pid] - state.ZPOS[npid], 2.) );
+            }
+            else
+            {
+                switch (npid)
+                {
+                // left wall
+                case -1:
+                    dist = state.XPOS[pid] - gr.dom_x0;
+                    break;
+                // lower wall
+                case -2:
+                    dist = state.ZPOS[pid] - gr.dom_z0;
+                    break;
+                // right wall
+                case -3:
+                    dist = gr.dom_x1 - state.XPOS[pid];
+                    break;
+                // upper wall
+                case -4:
+                    dist = gr.dom_z1 - state.ZPOS[pid];
+                    break;
+                default:
+                    cout << "unkown case" << endl;
+                    exit(1);;
+                }
+            }
+            state.VOLUME[pid] += dist;
+        }
+        //cout << state.VOLUME[pid] << endl;
+        vol_sum += state.VOLUME[pid];
+    }
+    #pragma omp parallel for
+    for ( int pid = 0; pid < gr.nparticles; pid++ )
+    {
+        state.VOLUME[pid] = state.VOLUME[pid] / vol_sum * gr.dom_vol;
+    }
+    //exit(1);
+    /*
+    // find particle volume
+    #pragma omp parallel for
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
         state.VOLUME[pid] = 0.;
     }
+    #pragma omp parallel for
     for (int i = 0; i < gr.ncells_x; i++)
     {
         for (int k = 0; k < gr.ncells_z; k++)
@@ -163,6 +235,7 @@ void Integrator::_compute_tendencies(const Grid &gr, State &state)
         }
     }
     // test for zero particle volumes and set those to minimum vol.
+    #pragma omp parallel for
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
         if (state.VOLUME[pid] == 0.)
@@ -172,6 +245,7 @@ void Integrator::_compute_tendencies(const Grid &gr, State &state)
             state.VOLUME[pid] = gr.cell_vol;
         }
     }
+    */
     timer->stop("integrator.tendencies.volume");
 
     // compute tendencies

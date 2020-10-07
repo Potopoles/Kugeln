@@ -47,10 +47,10 @@ int main(int argc, char** argv)
     nl.dom_z0       = 0.;
     nl.dom_z1       = 1000.;
     nl.ncells_part = 20;
-    nl.nclosest_part = 5;
+    nl.nclosest_part = 6;
     //////// INTEGRATION
-    nl.tot_time = 60;
-    nl.dt = 5E-2;
+    nl.tot_time = 600;
+    nl.dt = 1E-2;
     cout << "time step " << nl.dt << endl;
     //// DISCRETISATION
     // TIME
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     //// OUTPUT
     nl.bin_dir  = "output";
     // write output every xxx hours.
-    nl.nth_sec_out = 1;
+    nl.nth_sec_out = 0.1;
 
     ////// CREATE GRID
     ////////////////////////////////////////////////////////////////////////////
@@ -122,10 +122,10 @@ int main(int argc, char** argv)
             timer.start("timeloop diagnostics");
             string s(16, '\0');
             auto written = snprintf(&s[0], s.size(),
-                            "%.2f", gr.sim_time/60);
+                            "%.2f", gr.sim_time);
             s.resize(written);
             cout << "###### step: " << gr.tstep <<
-                    " sim time: " << s << " mins" << endl;
+                    " sim time: " << s << " sec" << endl;
             timer.stop("timeloop diagnostics");
         }
 
@@ -144,7 +144,6 @@ int main(int argc, char** argv)
         //// OUTPUT
         //////////////////////////////////////////////////////////////////////////
         //if ((gr.tstep == 0))
-        cout << gr.tstep << endl;
         if ((gr.tstep % gr.nth_tstep_out == 0))
         {
             timer.start("save_fields");
@@ -162,9 +161,9 @@ int main(int argc, char** argv)
 
     string s(16, '\0');
     auto written = snprintf(&s[0], s.size(),
-                    "%.2f", gr.sim_time/60.);
+                    "%.2f", gr.sim_time);
     cout << "FINISHED SIMULATION ###### step: " << gr.tstep <<
-            " sim time: " << s << " mins" << endl;
+            " sim time: " << s << " sec" << endl;
     timer.stop("TOTAL");
     timer.print_report();
     //cout << timer.ElapsedMs() << endl;

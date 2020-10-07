@@ -30,8 +30,10 @@ Grid::Grid(Namelist nl, Timer &timer)
     dt               = nl.dt;
     nt               = nl.tot_time / nl.dt + 1;
     time_discr       = nl.time_discr;
-    nth_tstep_out    = (int) nl.nth_sec_out / nl.dt;
+    nth_tstep_out    = (int) (nl.nth_sec_out / nl.dt);
     //nth_tstep_out    = 20;
+    //cout << nth_tstep_out << endl;
+    //exit(1);
     nclosest_part    = nl.nclosest_part;
 
     tstep            = 0;

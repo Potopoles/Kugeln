@@ -24,6 +24,7 @@ State::State(int nparticles, int nclosest_part)
     TEMP.reserve(nparticles);
 
     NEIGHID.resize(nparticles, vector<int>(nclosest_part, 0));
+    //NEIGHDIST.resize(nparticles, vector<int>(nclosest_part, 0));
 
     for ( int pid = 0; pid < nparticles; pid++ )
     {

@@ -31,12 +31,13 @@ void field_to_binary(Namelist nl, const Grid &gr,
 {
     // construct output path
     ostringstream oss;
-    oss << internal << setfill('0') << setw(5) << (int) gr.sim_time;
+    oss << internal << setfill('0') << setw(6) << (int) (gr.sim_time*10);
     //oss << internal << setfill('0') << setw(5) << (int) gr.tstep;
     string field_out_path = nl.bin_dir + "/" + nl.sim_tag + 
                     "_np" + to_string(gr.nparticles) +
                     "_" + field_name +
-                    "_t_" + oss.str() + "_sec.bin";
+                    "_t_" + oss.str() + "_decisec.bin";
+    //cout << field_out_path << endl;
 
     // open binary file for field
     ofstream field_out_file;

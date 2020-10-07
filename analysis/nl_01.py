@@ -15,7 +15,7 @@ alpha=0
 
 min_start = 0
 min_end = 10
-sec_inc = 1
+sec_inc = 0.1
 i_save = 1
 
 #dtype=np.float32

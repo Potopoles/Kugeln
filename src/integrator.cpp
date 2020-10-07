@@ -258,6 +258,7 @@ void Integrator::_advance_time(const Grid &gr, dtype time_step,
                                 State &state_now, State &state_new)
 {
     // advance particle position and speed
+    #pragma omp parallel for
     for ( int pid = 0; pid < gr.nparticles; pid++ )
     {
         // particle position
@@ -276,12 +277,14 @@ void Integrator::_advance_time(const Grid &gr, dtype time_step,
         if (state_new.XPOS[pid] < gr.dom_x0)
         {
             state_new.XPOS[pid] = gr.dom_x0 - state_new.XPOS[pid];
+            //state_new.XPOS[pid] = gr.dom_x0;
             state_new.XSPEED[pid] = 0.;
         }
         if (state_new.XPOS[pid] > gr.dom_x1)
         {
             state_new.XPOS[pid] = gr.dom_x1 - 
                         (state_new.XPOS[pid] - gr.dom_x1);
+            //state_new.XPOS[pid] = gr.dom_x1;
             state_new.XSPEED[pid] = 0.;
         }
         /*
@@ -301,12 +304,14 @@ void Integrator::_advance_time(const Grid &gr, dtype time_step,
         if (state_new.ZPOS[pid] < gr.dom_z0)
         {
             state_new.ZPOS[pid] = gr.dom_z0 - state_new.ZPOS[pid];
+            //state_new.ZPOS[pid] = gr.dom_z0;
             state_new.ZSPEED[pid] = 0.;
         }
         if (state_new.ZPOS[pid] > gr.dom_z1)
         {
             state_new.ZPOS[pid] = gr.dom_z1 - 
                         (state_new.ZPOS[pid] - gr.dom_z1);
+            //state_new.ZPOS[pid] = gr.dom_z1;
             state_new.ZSPEED[pid] = 0.;
         }
 

@@ -27,4 +27,4 @@ const dtype CON_RD = 287.058;
 const dtype CON_PI = 3.141592;
 
 // number of parallel OMP threads
-const int OMP_NUM_THREADS = 1;
+const int OMP_NUM_THREADS = 8;

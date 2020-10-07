@@ -58,7 +58,6 @@ void Dynamic_Tendencies::compute_tendencies(
         dtype diffx = 0.;
         dtype diffz = 0.;
         int nclosest = 0;
-        #pragma omp parallel for
         for ( int i = 0; i < gr.nclosest_part; i++ )
         {
             int npid = state.NEIGHID[pid][i];
